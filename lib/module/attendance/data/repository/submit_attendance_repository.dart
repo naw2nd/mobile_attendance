@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mobile_attendance/constant.dart';
+import 'package:mobile_attendance/shared/constant.dart';
 import 'package:mobile_attendance/module/attendance/data/model/attendance_data_model.dart';
 import 'package:mobile_attendance/module/attendance/domain/entity/attendance_data.dart';
 import 'package:mobile_attendance/module/attendance/domain/interface/submit_attendance_interface.dart';
@@ -37,7 +37,7 @@ class SubmitAttendanceRepository implements SubmitAttendanceInterface {
   Future storeAttendance({
     required AttendanceData data,
     required LocationResult location,
-    double maxAttendanceDistance = Constat.defaultMaxLocationRadius,
+    double maxAttendanceDistance = Constant.defaultMaxLocationRadius,
   }) async {
     final currentLocation = await locationManager.getCurrentLocation();
     if (currentLocation != null) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_attendance/module/master_location/presentation/controller/master_location_controller.dart';
 import 'package:mobile_attendance/package_handler/location_manager/domain/entity/location_result.dart';
+import 'package:mobile_attendance/shared/widget_state.dart';
 
 class MasterLocationPage extends StatelessWidget {
   final MasterLocationController controller =
@@ -29,31 +30,64 @@ class MasterLocationPage extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             width: double.maxFinite,
             child: Obx(() {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Latitude: ${controller.savedLocation.value.latitude}'),
-                  Text(
-                      'Longitude: ${controller.savedLocation.value.longitude}'),
-                ],
-              );
+              if (controller.savedLocation.value != null) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        'Latitude: ${controller.savedLocation.value?.latitude}'),
+                    Text(
+                        'Longitude: ${controller.savedLocation.value?.longitude}'),
+                  ],
+                );
+              }
+
+              return const Text(textAlign: TextAlign.center, 'Empty Data');
             }),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.edit),
+      floatingActionButton: EditMasterLocationButton(controller: controller),
+    );
+  }
+}
+
+class EditMasterLocationButton extends StatelessWidget {
+  const EditMasterLocationButton({
+    super.key,
+    required this.controller,
+  });
+
+  final MasterLocationController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return FloatingActionButton(
+          child: buttonIcon,
           onPressed: () async {
             final LocationResult? result =
                 await Get.dialog(AddNewLocationDialog(
-              defaultLocation: controller.initalLocation.value,
+              defaultLocation: controller.initialLocation.value,
             ));
             if (result != null) {
               controller.setSavedLocation(location: result);
             }
-          }),
-    );
+          });
+    });
+  }
+
+  Widget get buttonIcon {
+    if (controller.initialLocationState.value != WidgetState.success) {
+      return const CircularProgressIndicator();
+    }
+
+    if (controller.savedLocation.value == null) {
+      return const Icon(Icons.add);
+    } else {
+      return const Icon(Icons.edit);
+    }
   }
 }
 

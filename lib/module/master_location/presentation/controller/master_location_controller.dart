@@ -6,14 +6,16 @@ import 'package:mobile_attendance/module/master_location/data/master_location_re
 import 'package:mobile_attendance/module/master_location/domain/master_location_interface.dart';
 import 'package:mobile_attendance/package_handler/location_manager/domain/entity/location_result.dart';
 import 'package:mobile_attendance/package_handler/location_manager/domain/location_manager.dart';
+import 'package:mobile_attendance/shared/widget_state.dart';
 
 class MasterLocationController extends GetxController {
   final MasterLocationInterface masterLocationInterface =
       MasterLocationRepository(localStorage: Get.find());
   final LocationManager locationManager = Get.find();
 
-  final savedLocation = const LocationResult(latitude: 0, longitude: 0).obs;
-  final initalLocation = const LocationResult(latitude: 0, longitude: 0).obs;
+  final savedLocation = Rxn<LocationResult?>();
+  final initialLocation = const LocationResult(latitude: 0, longitude: 0).obs;
+  final initialLocationState = WidgetState.loading.obs;
 
   @override
   void onInit() {
@@ -24,8 +26,7 @@ class MasterLocationController extends GetxController {
 
   Future<void> getSavedLocation() async {
     try {
-      savedLocation.value = await masterLocationInterface.getSavedLocation() ??
-          const LocationResult(latitude: 0, longitude: 0);
+      savedLocation.value = await masterLocationInterface.getSavedLocation();
     } on Exception catch (e) {
       Get.dialog(AlertDialog(
         content: Text(e.toString()),
@@ -46,11 +47,15 @@ class MasterLocationController extends GetxController {
 
   Future<void> setInitalLocation() async {
     try {
+      initialLocationState(WidgetState.loading);
+
       final currentLocation =
           await locationManager.getCurrentLocation(isAllowMocked: true);
       if (currentLocation != null) {
-        initalLocation(currentLocation);
+        initialLocation(currentLocation);
       }
+
+      initialLocationState(WidgetState.success);
     } catch (e) {
       log(e.toString());
     }

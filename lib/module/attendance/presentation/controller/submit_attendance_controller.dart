@@ -58,8 +58,8 @@ class SubmitAttendanceController extends GetxController {
         barrierDismissible: false,
       );
 
-      final attendanceLocation = await locationManagerInterface
-          .getCurrentLocation(isAllowMocked: true);
+      final attendanceLocation =
+          await locationManagerInterface.getCurrentLocation();
 
       final masterLocation = await getMasterLocation();
       if (masterLocation == null) {

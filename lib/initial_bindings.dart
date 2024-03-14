@@ -8,6 +8,7 @@ class InitalBindings extends Bindings {
   @override
   void dependencies() {
     Get.put<LocalStorage>(LocalStorageImpl(), permanent: true);
-    Get.put<LocationManager>(LocationManagerImpl(), permanent: true);
+    Get.put<LocationManager>(LocationManagerImpl(isAllowMocked: true),
+        permanent: true);
   }
 }

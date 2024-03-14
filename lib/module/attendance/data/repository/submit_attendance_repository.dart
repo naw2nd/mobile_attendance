@@ -39,30 +39,23 @@ class SubmitAttendanceRepository implements SubmitAttendanceInterface {
     required LocationResult location,
     double maxAttendanceDistance = Constant.defaultMaxLocationRadius,
   }) async {
-    final currentLocation = await locationManager.getCurrentLocation();
-    if (currentLocation != null) {
-      final distance = locationManager.getDistanceBetween(
-          currentLocation,
-          LocationResult(
-            latitude: location.latitude,
-            longitude: location.longitude,
-          ));
+    final distance =
+        locationManager.getDistanceBetween(data.location, location);
 
-      if (distance <= maxAttendanceDistance) {
-        final attendanceData = data.copyWith(distance: distance);
+    if (distance <= maxAttendanceDistance) {
+      final attendanceData = data.copyWith(distance: distance);
 
-        List<AttendanceData> savedAttendances = await fetchSavedAttendances();
-        savedAttendances.add(attendanceData);
+      List<AttendanceData> savedAttendances = await fetchSavedAttendances();
+      savedAttendances.add(attendanceData);
 
-        final models = AttendanceDataModel.fromEntities(savedAttendances);
-        final json = models.map((model) => model.toMap()).toList();
+      final models = AttendanceDataModel.fromEntities(savedAttendances);
+      final json = models.map((model) => model.toMap()).toList();
 
-        await localStorage.store(
-            key: _savedAttendancesKey, value: jsonEncode(json));
-      } else {
-        throw Exception(
-            'Jarak lokasi anda = ${distance.toStringAsFixed(2)} m, lebih dari jarak maksimal yang ditentukan ($maxAttendanceDistance m)');
-      }
+      await localStorage.store(
+          key: _savedAttendancesKey, value: jsonEncode(json));
+    } else {
+      throw Exception(
+          'Jarak lokasi anda = ${distance.toStringAsFixed(2)} m, lebih dari jarak maksimal yang ditentukan ($maxAttendanceDistance m)');
     }
   }
 

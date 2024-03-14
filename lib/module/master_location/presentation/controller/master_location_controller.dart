@@ -49,8 +49,7 @@ class MasterLocationController extends GetxController {
     try {
       initialLocationState(WidgetState.loading);
 
-      final currentLocation =
-          await locationManager.getCurrentLocation(isAllowMocked: true);
+      final currentLocation = await locationManager.getCurrentLocation();
       if (currentLocation != null) {
         initialLocation(currentLocation);
       }

@@ -66,12 +66,14 @@ class EditMasterLocationButton extends StatelessWidget {
       return FloatingActionButton(
           child: buttonIcon,
           onPressed: () async {
-            final LocationResult? result =
-                await Get.dialog(AddNewLocationDialog(
-              defaultLocation: controller.initialLocation.value,
-            ));
-            if (result != null) {
-              controller.setSavedLocation(location: result);
+            if (controller.initialLocationState.value == WidgetState.success) {
+              final LocationResult? result =
+                  await Get.dialog(AddNewLocationDialog(
+                defaultLocation: controller.initialLocation.value,
+              ));
+              if (result != null) {
+                controller.setSavedLocation(location: result);
+              }
             }
           });
     });

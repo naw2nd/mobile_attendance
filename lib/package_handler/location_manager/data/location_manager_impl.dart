@@ -7,11 +7,13 @@ import 'package:mobile_attendance/package_handler/location_manager/domain/locati
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationManagerImpl implements LocationManager {
+  LocationManagerImpl({this.isAllowMocked = false});
+
+  final bool isAllowMocked;
   final _locationErrorNameLog = 'Location Manager Error';
 
   @override
-  Future<LocationResult?> getCurrentLocation(
-      {bool isAllowMocked = false}) async {
+  Future<LocationResult?> getCurrentLocation() async {
     try {
       await Permission.location.request();
       final position = await Geolocator.getCurrentPosition();

@@ -23,6 +23,10 @@ class SubmitAttendancePage extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.all(20).copyWith(top: 10),
         child: Obx(() {
+          if (controller.savedAttendances.isEmpty) {
+            return const Center(child: Text('Empty Data'));
+          }
+
           return ListView(
             children: [
               ...controller.savedAttendances.map(
@@ -36,7 +40,8 @@ class SubmitAttendancePage extends StatelessWidget {
                         children: [
                           Text('Latitude: ${element.location.latitude}'),
                           Text('Longitude: ${element.location.longitude}'),
-                          Text('Jarak: ${element.distance}')
+                          Text(
+                              'Jarak: ${element.distance?.toStringAsFixed(2)} m')
                         ],
                       ),
                     ),

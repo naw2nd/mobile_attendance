@@ -25,13 +25,13 @@ class MasterLocationPage extends StatelessWidget {
       ),
       body: Container(
         margin: const EdgeInsets.all(20).copyWith(top: 10),
-        child: Card(
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            width: double.maxFinite,
-            child: Obx(() {
-              if (controller.savedLocation.value != null) {
-                return Column(
+        child: Obx(() {
+          if (controller.savedLocation.value != null) {
+            return Card(
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                width: double.maxFinite,
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -40,13 +40,12 @@ class MasterLocationPage extends StatelessWidget {
                     Text(
                         'Longitude: ${controller.savedLocation.value?.longitude}'),
                   ],
-                );
-              }
-
-              return const Text(textAlign: TextAlign.center, 'Empty Data');
-            }),
-          ),
-        ),
+                ),
+              ),
+            );
+          }
+          return const Center(child: Text('Empty Data'));
+        }),
       ),
       floatingActionButton: EditMasterLocationButton(controller: controller),
     );
@@ -132,7 +131,7 @@ class _AddNewLocationDialogState extends State<AddNewLocationDialog> {
             const SizedBox(height: 20),
             SizedBox(
               width: double.maxFinite,
-              child: ElevatedButton(
+              child: TextButton(
                   onPressed: () {
                     final result = LocationResult(
                       latitude: double.tryParse(latitude.text) ?? 0,
@@ -140,7 +139,7 @@ class _AddNewLocationDialogState extends State<AddNewLocationDialog> {
                     );
                     Get.back(result: result);
                   },
-                  child: const Text('Add')),
+                  child: const Text('Save')),
             )
           ],
         ),

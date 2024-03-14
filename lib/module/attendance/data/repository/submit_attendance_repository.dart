@@ -61,7 +61,7 @@ class SubmitAttendanceRepository implements SubmitAttendanceInterface {
             key: _savedAttendancesKey, value: jsonEncode(json));
       } else {
         throw Exception(
-            'Jarak lokasi anda = $distance m, lebih dari $maxAttendanceDistance m');
+            'Jarak lokasi anda = ${distance.toStringAsFixed(2)} m, lebih dari jarak maksimal yang ditentukan ($maxAttendanceDistance m)');
       }
     }
   }

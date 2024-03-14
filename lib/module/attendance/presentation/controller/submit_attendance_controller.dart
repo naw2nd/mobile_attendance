@@ -41,18 +41,42 @@ class SubmitAttendanceController extends GetxController {
 
   Future saveAttendance() async {
     try {
+      Get.dialog(
+        Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(30),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Mengambil data lokasi'),
+                SizedBox(height: 10),
+                LinearProgressIndicator()
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+      );
+
       final attendanceLocation = await locationManagerInterface
           .getCurrentLocation(isAllowMocked: true);
 
-      final savedLocation = await getMasterLocation();
-      if (attendanceLocation != null && savedLocation != null) {
+      final masterLocation = await getMasterLocation();
+      if (masterLocation == null) {
+        throw Exception('Data Master Location is Empty');
+      }
+
+      if (attendanceLocation != null) {
         final attendanceData = AttendanceData(location: attendanceLocation);
         await submitAttendanceInterface.storeAttendance(
-            data: attendanceData, location: savedLocation);
+            data: attendanceData, location: masterLocation);
       }
 
       await getAllSavedAttendaces();
+
+      Get.back();
     } catch (e) {
+      Get.back();
       Get.dialog(AlertDialog(
         content: Text(e.toString()),
       ));
